@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<project name="PhotoFrame" default="dist" basedir=".">
+    
+    <property environment="env"/>
+    
+    <property name="dist.dir" value="dist"/>    
+    <property name="src.dir" value="src"/>
+    <property name="rsc.dir" value="resources"/>
+    <property name="bin.dir" value="bin"/>
+    <property name="docs.dir" value="${dist.dir}/javadocs"/>
+        
+    <path id="class.path">
+        <pathelement path="${bin.dir}"/>
+    </path>
+    
+    <target name="clean">
+        <delete dir="${bin.dir}"/>
+        <mkdir dir="${bin.dir}"/>
+    </target>
+    
+    <target name="compile">
+        <javac source="1.6" target="1.6" destdir="${bin.dir}">
+            <src path="${src.dir}" />
+            <classpath refid="class.path"/>
+        </javac>
+    </target>
+
+    <target name="dist" depends="clean,compile,doc">
+        
+        <copy todir="${bin.dir}/resources">
+            <fileset dir="${rsc.dir}" includes="**/*"/>
+        </copy>
+
+        <jar jarfile="${dist.dir}/photoframe.jar">
+        	<fileset dir="${bin.dir}" />
+        	<fileset dir="${src.dir}" includes="**/*.java"/>
+            <manifest>
+              <attribute name="Built-By" value="${user.name}"/>
+              <attribute name="Implementation-Vendor" value="TargetR Ltd"/>
+              <attribute name="Implementation-Title" value="PhotoFrame"/>
+              <attribute name="Implementation-Version" value="1.0"/>
+              <attribute name="Main-Class" value="net.targetr.photoframe.Main"/>
+              <attribute name="Class-Path" value="${jar.classpath}"/>
+            </manifest>
+        </jar>
+    </target>
+    
+    <target name="doc">    
+      <javadoc
+               destdir="${docs.dir}"      
+               author="true"
+               classpathref="class.path"
+               version="true"
+               use="true"
+               windowtitle="PhotoFrame"
+               overview="${src.dir}/overview.html">
+
+        <group title="WebServer" packages="net.targetr.httpd*"/>
+        <packageset dir="${src.dir}" defaultexcludes="yes">
+          <include name="net/targetr/httpd/**"/>
+        </packageset>
+        <group title="PhotoFrame" packages="net.targetr.photoframe*"/>
+        <packageset dir="${src.dir}" defaultexcludes="yes">
+          <include name="net/targetr/photoframe/**"/>
+        </packageset>
+
+        <doctitle><![CDATA[PhotoFrame]]></doctitle>
+        
+        <tag name="TODO" scope="all" description="To do:"/>
+          <bottom>
+              <![CDATA[<i>Copyright &#169;<a href='http://www.targetr.net/'>TargetR Ltd</a>.</i>]]>
+          </bottom>
+       </javadoc>    
+    </target>
+</project>    

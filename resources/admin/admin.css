@@ -1,0 +1,89 @@
+body {
+  margin: 0;
+  padding: 0;
+  color: #FFF;
+  background-color: #000;
+}
+
+#container {
+  margin: 4px;
+}
+
+.upload-item {
+  overflow: hidden;
+  float: left;
+  width: 80px;
+  height: 80px;
+  margin: 4px;
+}
+
+.photo-item {
+  float: left;
+  width: 80px;
+  height: 80px;
+  background-size: 80px 80px;
+  margin: 4px;
+}
+
+.player-item {
+  float: left;
+  width: 80px;
+  height: 80px;
+  margin: 4px;
+}
+
+.player-btn {
+  display: none;
+  color: white;
+  background-color: rgba(100,100,200,0.4);
+  border: none;
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+  font-weight: bold;
+  top: 0;
+  left: 0;
+}
+
+.upload-btn {
+  background-color: rgba(100,160,100,1);
+  position: absolute;
+  border: none;
+  width: 80px;
+  height: 80px;
+  color: #FFF;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.delete-btn {
+  color: white;
+  background-color: rgba(200,100,100,0.4);
+  border: none;
+  width: 100%;
+  height: 40%;
+  font-size: 16px;
+  font-weight: bold;
+  top: 0;
+  left: 0;
+}
+
+.select-btn {
+  color: white;
+  background-color: rgba(100,200,100,0.4);
+  border: none;
+  width: 100%;
+  height: 60%;
+  font-size: 16px;
+  font-weight: bold;
+  top: 0;
+  left: 0;
+}
+
+.upload-item input[type=file] {
+  width: 80px;
+  height: 80px;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
