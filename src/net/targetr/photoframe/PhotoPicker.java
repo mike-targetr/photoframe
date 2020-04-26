@@ -171,7 +171,7 @@ public class PhotoPicker {
         // The same photos should be selected for all requests during DISPLAY_PERIOD.
         long timeSlot = (System.currentTimeMillis() - selectionTime) / DISPLAY_PERIOD;
         
-        if (timeSlot == this.timeSlot) {
+        if (timeSlot == this.timeSlot && shuffle != null) {
             return shuffle;
         }
         

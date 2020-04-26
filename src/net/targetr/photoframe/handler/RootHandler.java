@@ -36,8 +36,6 @@ public class RootHandler implements HttpRequestHandler {
 
     @Override
     public HttpResponse handle(HttpRequest request) throws Exception {
-        
-        HttpRequestHandler handler = null;
 
         if (request.path.equals("/")) {
            return new TempRedirectResponse("/admin/");

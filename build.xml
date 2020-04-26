@@ -8,6 +8,10 @@
     <property name="rsc.dir" value="resources"/>
     <property name="bin.dir" value="bin"/>
     <property name="docs.dir" value="${dist.dir}/javadocs"/>
+	
+    <property name="compile.optimise" value="true"/> 
+    <property name="compile.debug" value="true"/> 
+    <property name="compile.debuglevel" value="lines,vars,source"/> 
         
     <path id="class.path">
         <pathelement path="${bin.dir}"/>
@@ -19,13 +23,17 @@
     </target>
     
     <target name="compile">
-        <javac source="1.6" target="1.6" destdir="${bin.dir}">
+        <javac source="1.6" target="1.6" 
+            optimize="${compile.optimise}"
+            debug="${compile.debug}"
+            debuglevel="${compile.debuglevel}"
+        	destdir="${bin.dir}">
             <src path="${src.dir}" />
             <classpath refid="class.path"/>
         </javac>
     </target>
 
-    <target name="dist" depends="clean,compile,doc">
+    <target name="dist" depends="clean,compile">
         
         <copy todir="${bin.dir}/resources">
             <fileset dir="${rsc.dir}" includes="**/*"/>

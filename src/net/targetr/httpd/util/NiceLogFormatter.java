@@ -1,7 +1,7 @@
 package net.targetr.httpd.util;
 
-import java.text.MessageFormat;
-import java.util.Date;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
@@ -11,17 +11,36 @@ import java.util.logging.LogRecord;
  */
 public class NiceLogFormatter extends Formatter {
 
-    private static final MessageFormat messageFormat = new MessageFormat("{3,date,HH:mm:ss.SSS} {1} {2} {4}\n");
-
-    @Override
+    @Override 
     public String format(LogRecord record) {
-        Object[] arguments = new Object[6];
-        arguments[0] = record.getLoggerName();
-        arguments[1] = record.getLevel();
-        arguments[2] = Thread.currentThread().getName();
-        arguments[3] = new Date(record.getMillis());
-        arguments[4] = record.getMessage();
-        arguments[5] = record.getSourceMethodName();
-        return messageFormat.format(arguments);
+        
+        StringBuilder b = new StringBuilder();
+
+        b.append(record.getLevel());
+        b.append(" ");
+        b.append(Thread.currentThread().getName());
+        b.append(" ");
+        //b.append(record.getLoggerName());
+        //b.append(" ");
+        b.append(record.getMessage());
+        
+        if (record.getThrown() != null) {
+            b.append("\r\n\r\n");
+            b.append(prettyPrintStackTrace(record.getThrown()));
+        }
+        
+        b.append("\r\n");
+        
+        return b.toString();
+    }
+    
+    public static String prettyPrintStackTrace(Throwable ex) {
+        
+        StringWriter stackWriter = new StringWriter();
+        PrintWriter stackPrinter = new PrintWriter(stackWriter);
+        ex.printStackTrace(stackPrinter);
+        stackPrinter.close();
+        
+        return stackWriter.toString();
     }
 }
