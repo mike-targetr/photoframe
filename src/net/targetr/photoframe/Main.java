@@ -1,5 +1,6 @@
 package net.targetr.photoframe;
 
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,7 +15,8 @@ import net.targetr.httpd.util.NiceLogFormatter;
 /**
  * Starts the PhotoFrame software.
  * Creates a new HTTP server listening for connections and
- * attempts to open chromium browser in kiosk mode.
+ * attempts to open web browsers in kiosk mode.
+ * 
  * @author mike-targetr
  */
 public class Main {
@@ -22,6 +24,8 @@ public class Main {
     public static final String DEFAULT_UPLOAD_DIR = "photos";
 
     public static void main(String[] args) throws IOException {
+        
+        System.out.println("Command line options: [port] [photos-dir] [headless]");
         
         setupLogging();
         
@@ -41,15 +45,40 @@ public class Main {
         PhotoFrameServer server = new PhotoFrameServer(port, uploadPath);
         server.start();
         
-        String playerAddress = "http://localhost:" + port + "/player/";
+        boolean headless = GraphicsEnvironment.isHeadless();
+        if (args.length >= 3) {
+            headless = args[2].equalsIgnoreCase("headless"); 
+        }
+        
+        if (!headless) {
+            openWebPlayer("http://localhost:" + port + "/player/");
+        }
+    }
+
+    private static boolean openWebPlayer(String playerAddress) {
+
         try {
             String cmd = "chromium-browser --kiosk " + playerAddress;
             System.out.println("Executing: " + cmd);
             Runtime.getRuntime().exec(cmd);
+            return true;
         }
         catch (IOException ex) {
-            System.err.println("Failed to start web browser. Please manually open " + playerAddress);
+            System.err.println("Failed to execute chromium-browser.");
         }
+        
+        try {
+            String cmd = "firefox --kiosk " + playerAddress;
+            System.out.println("Executing: " + cmd);
+            Runtime.getRuntime().exec(cmd);
+            return true;
+        }
+        catch (IOException ex2) {
+            System.err.println("Failed to execute firefox.");
+        }
+        
+        System.err.println("Please manually open " + playerAddress + " in your web browser.");
+        return false;
     }
 
     private static void setupLogging() {

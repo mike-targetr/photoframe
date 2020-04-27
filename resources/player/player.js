@@ -37,6 +37,8 @@ function refreshAddress() {
 	httpReq.onreadystatechange = function() {
 		if (httpReq.readyState === 4 && httpReq.status === 200) {
 			var address = httpReq.responseText;
+			var help = document.getElementById("address-help");
+			help.innerHTML = "Upload new photos to:";
 			var link = document.getElementById("address");
 			link.href = address;
 			link.innerHTML = address;
@@ -44,6 +46,12 @@ function refreshAddress() {
 	};
 	httpReq.open("GET", "/api/address");
 	httpReq.send();
+}
+
+function shrinkAddress() {
+	var block = document.getElementById("address-block");
+	block.classList.add("info-small");
+	block.classList.remove("info-start");
 }
 
 function refreshCanvas() {
@@ -60,6 +68,8 @@ function refreshCanvas() {
 function loadAndDrawPhotos(photos) {
 	
 	if (photos.length == 0) return;
+	
+	setTimeout(shrinkAddress, 5000);
 	
 	var photoA = photos[0];
 	var photoB = photos.length >= 2 ? photos[1] : photos[0];
@@ -97,15 +107,20 @@ function drawPhotos(imageA, imageB) {
 	var usedWidth = canvas.height * photoAr;
 	var usedHeight = canvas.width / photoAr;
 	
+	var ctx = canvas.getContext('2d');
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	
 	if (usedWidth*1.75 <= canvas.width) {
+		var pad = canvas.width/200;
 		// Space for two similar photos horizontally
-		drawPhoto(imageA, 0, 0, canvas.width/2, canvas.height);
-		drawPhoto(imageB, canvas.width/2, 0, canvas.width/2, canvas.height);
+		drawPhoto(imageA, 0, 0, canvas.width/2-pad, canvas.height);
+		drawPhoto(imageB, canvas.width/2+pad, 0, canvas.width/2-pad, canvas.height);
 	}
 	else if (usedHeight*1.75 <= canvas.height) {
+		var pad = canvas.height/200;
 		// Space for two similar photos vertically
-		drawPhoto(imageA, 0, 0, canvas.width, canvas.height/2);
-		drawPhoto(imageB, 0, canvas.height/2, canvas.width, canvas.height/2);
+		drawPhoto(imageA, 0, 0, canvas.width, canvas.height/2-pad);
+		drawPhoto(imageB, 0, canvas.height/2+pad, canvas.width, canvas.height/2-pad);
 	}
 	else {
 		// Fill with single photo
@@ -127,7 +142,6 @@ function drawPhoto(image, x, y, width, height) {
 	
 	var ctx = canvas.getContext('2d');
 	ctx.imageSmoothingEnabled = IMAGE_SMOOTHING;
-	ctx.clearRect(x, y, width, height);
 	
 	if (targetAr > photoAr) {
 		// Crop top and bottom
